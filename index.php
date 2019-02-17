@@ -8,17 +8,17 @@
 <body class="text-center">
 <form class="form-signin">
   <img class="mb-4" src="img/logotipo.png" alt="activebox">
-  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-  <label for="inputEmail" class="sr-only">Email address</label>
+  <h1 class="h3 mb-3 font-weight-normal">Iniciar Sesión</h1>
+  <label for="inputEmail" class="sr-only">Correo Electronico</label>
   <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-  <label for="inputPassword" class="sr-only">Password</label>
+  <label for="inputPassword" class="sr-only">Contraseña</label>
   <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
   <div class="checkbox mb-3">
     <label>
-      <input type="checkbox" value="remember-me"> Remember me
+      <input type="checkbox" value="remember-me"> Recuerdame
     </label>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="button" id="buttonSign">Sign in</button>
+  <button class="btn btn-lg btn-primary btn-block" type="button" id="buttonSign">Iniciar</button>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
@@ -38,14 +38,12 @@
 				"usuario" : correo,
 				"password" : password,
 			};
+			// 3. Enviar a validar esos valores
 			//Tengo evento pero no selector
 			$.post("includes/_funciones.php", obj, function(){
-				
-			});
-			// 3. Enviar a validar esos valores
-
 			// 4. En caso de ser valido redireccionar a usuarios.php
 			// 5. En caso de no ser valido enviar mensaje de error
+			});
 		});
 	</script>
 	</form>
