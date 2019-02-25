@@ -11,12 +11,70 @@ require_once("con_db.php");
 		case 'insertar_usuarios':
 			insertar_usuarios();
 			break;
-		
+		case 'consultar_team':
+			consultar_team();
+			break;
+		case 'insertar_integrante':
+			insertar_integrante();
+			break;
 		default:
 			# code...
 			break;
 	}
 	//------------------------------FUNCIONES------------------------------//
+	function insertar_integrante(){
+		//Conectar a la bd
+		global $mysqli;
+		$nombre = $_POST['nombre'];
+		$correo = $_POST['correo'];
+		$pass = $_POST['password'];
+		$puesto = $_POST['puesto'];
+		$descripcion = $_POST['descripcion'];
+		$foto = $_POST['foto'];
+		$fb = $_POST['fb'];
+		$tw = $_POST['tw'];
+		$lk = $_POST['lk'];
+		//Validacion de campos vacios
+		if (empty($nombre) && empty($correo) && empty($pass) && empty($puesto) && empty($descripcion) && empty($foto) && empty($fb) && empty($tw) && empty($lk)) {
+			echo "0";
+		}elseif (empty($nombre)) {
+			echo "2";
+		}elseif (empty($correo)) {
+			echo "3";
+		}elseif ($correo != filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+			echo "4";
+		}elseif (empty($pass)) {
+			echo "5";
+		}elseif (empty($puesto)) {
+			echo "6";
+		}elseif (empty($descripcion)) {
+			echo "7";
+		}elseif (empty($foto)) {
+			echo "8";
+		}elseif (empty($fb)) {
+			echo "9";
+		}elseif (empty($tw)) {
+			echo "10";
+		}elseif (empty($lk)) {
+			echo "11";
+		}else{
+			$sql = "INSERT INTO team VALUES('', '$nombre', '$correo', '$pass', '$puesto', '$descripcion', '$foto', '$fb', '$tw', '$lk')";
+			$rsl = $mysqli->query($sql);
+			echo "1";
+		}	
+	}
+	function consultar_team(){
+		//Conectar a la BD
+		global $mysqli;
+		//Realizar consulta
+		$sql = "SELECT * FROM team";
+		$rsl = $mysqli->query($sql);
+		$array = [];
+		while ($row = mysqli_fetch_array($rsl)) {
+			array_push($array, $row);
+		}
+		echo json_encode($array); //Imprime Json encodeado	
+	}
 	function insertar_usuarios(){
 		//Conectar a la bd
 		global $mysqli;

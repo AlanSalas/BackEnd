@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Usuarios</title>
+    <title>Our Team</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
@@ -16,7 +16,7 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Usuarios</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Our Team</a>
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -31,12 +31,12 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="usuarios.php">
-                                Usuarios <span class="sr-only">(current)</span>
+                            <a class="nav-link" href="usuarios.php">
+                                Usuarios
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="ourteam.php">
+                            <a class="nav-link active" href="ourteam.php">
                                 Our Team
                             </a>
                         </li>
@@ -70,7 +70,7 @@
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Usuarios</h1>
+                    <h1 class="h2">Our Team</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
                             <button type="button" class="btn btn-sm btn-outline-danger cancelar">Cancelar</button>
@@ -78,13 +78,15 @@
                         </div>
                     </div>
                 </div>
-                <h2 id = "h2-title">Consultar Usuarios</h2>
+                <h2 id = "h2-title">Consultar Team</h2>
                 <div class="table-responsive view" id="show_data">
                     <table class="table table-striped table-sm" id="list-usuarios">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Teléfono</th>
+                                <th>Puesto</th>
+                                <th>Descripción</th>
+                                <th>Foto</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -103,15 +105,35 @@
                                     <label for="correo">Correo Electrónico</label>
                                     <input type="email" id="inputCorreo" name="correo" class="form-control">
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="telefono">Teléfono</label>
-                                    <input type="tel" id="inputTelefono" name="telefono" class="form-control">
-                                </div>
                                 <div class="form-group">
                                     <label for="password">Contraseña</label>
                                     <input type="password" id="inputPassword" name="password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="puesto">Puesto</label>
+                                    <input type="puesto" id="inputPuesto" name="puesto" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="descripcion">Descripción</label>
+                                    <input type="text" id="inputDescripcion" name="descripcion" class="form-control">
+                                </div>  
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="foto">Foto</label>
+                                    <input type="file" id="inputFoto" name="foto" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fb-link">Facebook Link</label>
+                                    <input type="text" id="inputFb" name="fb-link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tw-link">Twitter Link</label>
+                                    <input type="text" id="inputTw" name="tw-link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lk-link">Linkedin Link</label>
+                                    <input type="text" id="inputLk" name="lk-link" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -148,7 +170,7 @@
 
         function consultar() {
             let obj = {
-                "accion": "consultar_usuarios"
+                "accion": "consultar_team"
             };
             $.post("includes/_funciones.php", obj, function (respuesta) {
                 let template = ``;
@@ -156,11 +178,12 @@
                     template +=
                         `
           <tr>
-          <td>${e.nombre_usr}</td>
-          <td>${e.telefono_usr}</td>
-          <td>
-          <a href="#" data-id="${e.id_usr}">Editar</a>
-          <a href="#" data-id="${e.id_usr}">Eliminar</a>
+          <td>${e.nombre}</td>
+          <td>${e.puesto}</td>
+          <td>${e.descripcion}</td>
+          <td>${e.foto}</td>
+          <td><a href="#" data-id="${e.id_team}">Editar</a>
+          <a href="#" data-id="${e.id_team}">Eliminar</a>
           </td>
           </tr>
           `;
@@ -174,19 +197,29 @@
         });
         $("#nuevo_registro").click(function () {
             change_view('insert_data');
-            $("#h2-title").text("Insertar Usuario");
+            $("#h2-title").text("Insertar Integrante");
         });
         $("#guardar_datos").click(function () {
-            let nombre_usr = $("#inputNombre").val();
-            let correo_usr = $("#inputCorreo").val();
-            let telefono_usr = $("#inputTelefono").val();
-            let password_usr = $("#inputPassword").val();
+            let nombre = $("#inputNombre").val();
+            let correo = $("#inputCorreo").val();
+            let password = $("#inputPassword").val();
+            let puesto = $("#inputPuesto").val();
+            let descripcion = $("#inputDescripcion").val();
+            let foto = $("#inputFoto").val();
+            let fb = $("#inputFb").val();
+            let tw = $("#inputTw").val();
+            let lk = $("#inputLk").val();
             let obj = {
-                "accion": "insertar_usuarios",
-                "nombre_usr" : nombre_usr,
-                "correo_usr" : correo_usr,
-                "telefono_usr" : telefono_usr,
-                "password_usr" : password_usr
+                "accion": "insertar_integrante",
+                "nombre" : nombre,
+                "correo" : correo,
+                "password" : password,
+                "puesto" : puesto,
+                "descripcion" : descripcion,
+                "foto" : foto,
+                "fb" : fb,
+                "tw" : tw,
+                "lk" : lk
             }
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
@@ -198,24 +231,32 @@
                 }
             });
             $.post("includes/_funciones.php", obj, function (v) {
-                if (v == 0) {
-                    $("#error").html("Campos vacios").fadeIn();
-                }if (v == 2) {
-                    $("#error").html("Favor de ingresar tu nombre").fadeIn();
-                }if (v == 3) {
-                    $("#error").html("Favor de ingresar un correo electronico").fadeIn();
-                }if (v == 4) {
-                    $("#error").html("Favor de ingresar un correo electronico valido").fadeIn();
-                }if (v == 5) {
-                    $("#error").html("Favor de ingresar un telefono").fadeIn();
-                }if (v == 6) {
-                    $("#error").html("Favor de ingresar un telefono numerico").fadeIn();
-                }if (v == 7) {
-                    $("#error").html("Favor de ingresar una contraseña").fadeIn();
-                }if (v == 1) {
-                    alert("Usuario insertado");
-                    location.reload();
-                }
+            if (v == 0) {
+                $("#error").html("Campos vacios").fadeIn();
+            }if (v == 1) {
+                alert("Integrante Insertado");
+                location.reload();
+            }if (v == 2) {
+                $("#error").html("Favor de ingresar tu nombre").fadeIn();
+            }if (v == 3) {
+                $("#error").html("Favor de ingresar un correo electronico").fadeIn();
+            }if (v == 4) {
+                $("#error").html("Favor de ingresar un correo electronico valido").fadeIn();
+            }if (v == 5) {
+                $("#error").html("Favor de ingresar una contraseña").fadeIn();
+            }if (v == 6) {
+                $("#error").html("Favor de ingresar su puesto").fadeIn();
+            }if (v == 7) {
+                $("#error").html("Favor de añadir una descripción").fadeIn();
+            }if (v == 8) {
+                $("#error").html("Favor de añadir una foto").fadeIn();
+            }if (v == 9) {
+                $("#error").html("Favor de añadir link a Facebook").fadeIn();
+            }if (v == 10) {
+                $("#error").html("Favor de añadir link a Twitter").fadeIn();
+            }if (v == 11) {
+                $("#error").html("Favor de añadir link a Linkedin").fadeIn();
+            }
             });
         });
         $("#main").find(".cancelar").click(function () {
@@ -226,7 +267,7 @@
             });
             $("#error").hide();
             $("#success").hide();
-            $("#h2-title").text("Consultar Usuarios");
+            $("#h2-title").text("Consultar Team");
         });
     </script>
 </body>
