@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <h2 id = "h2-title">Consultar Usuarios</h2>
+                <h2 id="h2-title">Consultar Usuarios</h2>
                 <div class="table-responsive view" id="show_data">
                     <table class="table table-striped table-sm" id="list-usuarios">
                         <thead>
@@ -134,6 +134,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script>
+    //FUNCION PARA CAMBIAR VISTA
         function change_view(vista = 'show_data') {
             $("#main").find(".view").each(function () {
                 // $(this).addClass("d-none");
@@ -145,7 +146,7 @@
                 }
             });
         }
-
+    //FUNCION PARA CONSULTAR A LA BD
         function consultar() {
             let obj = {
                 "accion": "consultar_usuarios"
@@ -159,8 +160,8 @@
           <td>${e.nombre_usr}</td>
           <td>${e.telefono_usr}</td>
           <td>
-          <a href="#" data-id="${e.id_usr}">Editar</a>
-          <a href="#" data-id="${e.id_usr}">Eliminar</a>
+          <a href="#" data-id="${e.id_usr}" class="editar_usuario">Editar</a>
+          <a href="#" data-id="${e.id_usr}" class="eliminar_usuario">Eliminar</a>
           </td>
           </tr>
           `;
@@ -172,10 +173,12 @@
             consultar();
             change_view();
         });
+    //FUNCION PARA CAMBIAR VISTA -> FORMULARIO
         $("#nuevo_registro").click(function () {
             change_view('insert_data');
             $("#h2-title").text("Insertar Usuario");
         });
+    //FUNCION PARA INSERTAR DATOS A LA BD
         $("#guardar_datos").click(function () {
             let nombre_usr = $("#inputNombre").val();
             let correo_usr = $("#inputCorreo").val();
@@ -183,10 +186,10 @@
             let password_usr = $("#inputPassword").val();
             let obj = {
                 "accion": "insertar_usuarios",
-                "nombre_usr" : nombre_usr,
-                "correo_usr" : correo_usr,
-                "telefono_usr" : telefono_usr,
-                "password_usr" : password_usr
+                "nombre_usr": nombre_usr,
+                "correo_usr": correo_usr,
+                "telefono_usr": telefono_usr,
+                "password_usr": password_usr
             }
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
@@ -200,23 +203,77 @@
             $.post("includes/_funciones.php", obj, function (v) {
                 if (v == 0) {
                     $("#error").html("Campos vacios").fadeIn();
-                }if (v == 2) {
+                }
+                if (v == 2) {
                     $("#error").html("Favor de ingresar tu nombre").fadeIn();
-                }if (v == 3) {
+                }
+                if (v == 3) {
                     $("#error").html("Favor de ingresar un correo electronico").fadeIn();
-                }if (v == 4) {
+                }
+                if (v == 4) {
                     $("#error").html("Favor de ingresar un correo electronico valido").fadeIn();
-                }if (v == 5) {
+                }
+                if (v == 5) {
                     $("#error").html("Favor de ingresar un telefono").fadeIn();
-                }if (v == 6) {
+                }
+                if (v == 6) {
                     $("#error").html("Favor de ingresar un telefono numerico").fadeIn();
-                }if (v == 7) {
+                }
+                if (v == 7) {
                     $("#error").html("Favor de ingresar una contraseña").fadeIn();
-                }if (v == 1) {
+                }
+                if (v == 1) {
                     alert("Usuario insertado");
                     location.reload();
                 }
             });
+        });
+    //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD
+        $("#main").on("click", ".eliminar_usuario", function (e) {
+            e.preventDefault();
+            let confirmacion = confirm('¿Desea eliminar este usuario?');
+            if (confirmacion) {
+                let id = $(this).data('id'),
+                    obj = {
+                        "accion": "eliminar_usuario",
+                        "id": id
+                    };
+                $.post("includes/_funciones.php", obj, function (respuesta) {
+                    alert(respuesta);
+                    consultar();
+                });
+            } else {
+                alert('El registro no se ha eliminado');
+            }
+        });
+    //FUNCION PARA EDITAR 1 REGISTRO EN LA BD
+        $("#main").on("click", ".editar_usuario", function (e) {
+            e.preventDefault();
+            let confirmacion = confirm('¿Desea editar éste usuario?');
+            if (confirmacion) {
+                change_view('insert_data');
+                $("#h2-title").text("Editar Usuario");
+                //$("#guardar_datos").attr("id", "editar_datos").html("Editar");
+                let id = $(this).data('id'),
+                    nombre_usr = $("#inputNombre").val(),
+                    correo_usr = $("#inputCorreo").val(),
+                    telefono_usr = $("#inputTelefono").val(),
+                    password_usr = $("#inputPassword").val(),
+                    obj = {
+                        "accion": "editar_usuario",
+                        "nombre_usr": nombre_usr,
+                        "correo_usr": correo_usr,
+                        "telefono_usr": telefono_usr,
+                        "password_usr": password_usr,
+                        "id": id
+                    };
+                $.post("includes/_funciones.php", obj, function (respuesta) {
+                    //alert(respuesta);
+                    //consultar();
+                });
+            } else {
+                alert('El usuario no se ha editado');
+            }
         });
         $("#main").find(".cancelar").click(function () {
             change_view();
