@@ -15,7 +15,10 @@ require_once("con_db.php");
 			eliminar_usuarios($_POST['id']);
 			break;
 		case 'editar_usuario':
-			editar_usuarios($_POST['id']);
+			editar_usuario();
+			break;
+		case 'consultar_registro':
+			consultar_registro($_POST['id']);
 			break;
 		case 'consultar_team':
 			consultar_team();
@@ -81,6 +84,7 @@ require_once("con_db.php");
 		$correo = $_POST['correo_usr'];
 		$telefono = $_POST['telefono_usr'];
 		$pass = $_POST['password_usr'];
+		$expresion = '/^[9|9|5][0-10]{8}$/';
 		//Validacion de campos vacios
 		if (empty($nombre) && empty($correo) && empty($telefono) && empty($pass)) {
 			echo "0";
@@ -92,7 +96,7 @@ require_once("con_db.php");
 			echo "4";
 		}elseif (empty($telefono)) {
 			echo "5";
-		}elseif ($telefono != filter_var($telefono, FILTER_VALIDATE_INT)) {
+		}elseif (preg_match($expresion, $telefono_usr)) {
 			echo "6";
 		}elseif (empty($pass)) {
 			echo "7";
@@ -105,45 +109,52 @@ require_once("con_db.php");
 
 	function eliminar_usuarios($id){
 		global $mysqli;
-		$consulta = "DELETE FROM usuarios WHERE id_usr = $id";
-		$resultado = mysqli_query($mysqli,$consulta);
-		if ($resultado) {
+		$sql = "DELETE FROM usuarios WHERE id_usr = $id";
+		$rsl = $mysqli->query($sql);
+		if ($rsl) {
 			echo "Se elimino correctamente";
 		}else{
 			echo "Se genero un error, intenta nuevamente";
 		}
 	}
-	
-	function editar_usuarios($id){
+
+	function editar_usuario(){
 		global $mysqli;
-		$nombre = $_POST['nombre_usr'];
-		$correo = $_POST['correo_usr'];
-		$telefono = $_POST['telefono_usr'];
-		$pass = $_POST['password_usr'];
+		extract($_POST);
+		$expresion = '/^[9|9|5][0-10]{8}$/';
 		//Validacion de campos vacios
-		if (empty($nombre) && empty($correo) && empty($telefono) && empty($pass)) {
-			//echo "0";
-		}elseif (empty($nombre)) {
+		if (empty($nombre_usr) && empty($correo_usr) && empty($telefono_usr) && empty($pass_usr)) {
+			echo "0";
+		}elseif (empty($nombre_usr)) {
 			echo "2";
-		}elseif (empty($correo)) {
+		}elseif (empty($correo_usr)) {
 			echo "3";
-		}elseif ($correo != filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+		}elseif ($correo_usr != filter_var($correo_usr, FILTER_VALIDATE_EMAIL)) {
 			echo "4";
-		}elseif (empty($telefono)) {
+		}elseif (empty($telefono_usr)) {
 			echo "5";
-		}elseif ($telefono != filter_var($telefono, FILTER_VALIDATE_INT)) {
+		}elseif (preg_match($expresion, $telefono_usr)) {
 			echo "6";
-		}elseif (empty($pass)) {
+		}elseif (empty($password_usr)) {
 			echo "7";
 		}else{
-			$sql = "UPDATE usuarios SET nombre_usr = '$nombre', correo_usr = '$correo', telefono_usr = '$telefono', password_usr = '$pass' WHERE id_usr = $id";
+			$sql = "UPDATE usuarios SET nombre_usr = '$nombre_usr', correo_usr = '$correo_usr', password_usr = '$password_usr', telefono_usr = '$telefono_usr'
+			WHERE id_usr = '$id'";
 			$rsl = $mysqli->query($sql);
 			if ($rsl) {
-				echo "Se edito el usuario correctamente";
+				echo "8";
 			}else{
-				echo "Se genero un error, intenta nuevamente";
+				echo "9";
 			}
 		}
+	}
+
+	function consultar_registro($id){
+		global $mysqli;
+		$sql = "SELECT * FROM usuarios WHERE id_usr = $id";
+		$rsl = $mysqli->query($sql);
+		$fila = mysqli_fetch_array($rsl);
+		echo json_encode($fila); //Imprime Json encodeado	
 	}
 	//------------------------------FUNCIONES MODULO OUR TEAM------------------------------//
 	function consultar_team(){

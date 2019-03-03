@@ -134,7 +134,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script>
-    //FUNCION PARA CAMBIAR VISTA
+        //FUNCION PARA CAMBIAR VISTA
         function change_view(vista = 'show_data') {
             $("#main").find(".view").each(function () {
                 // $(this).addClass("d-none");
@@ -146,7 +146,7 @@
                 }
             });
         }
-    //FUNCION PARA CONSULTAR A LA BD
+        //FUNCION PARA CONSULTAR A LA BD
         function consultar() {
             let obj = {
                 "accion": "consultar_usuarios"
@@ -169,16 +169,12 @@
                 $("#list-usuarios tbody").html(template);
             }, "JSON");
         }
-        $(document).ready(function () {
-            consultar();
-            change_view();
-        });
-    //FUNCION PARA CAMBIAR VISTA -> FORMULARIO
+        //FUNCION PARA CAMBIAR VISTA -> FORMULARIO
         $("#nuevo_registro").click(function () {
             change_view('insert_data');
             $("#h2-title").text("Insertar Usuario");
         });
-    //FUNCION PARA INSERTAR DATOS A LA BD
+        //FUNCION PARA INSERTAR DATOS A LA BD
         $("#guardar_datos").click(function () {
             let nombre_usr = $("#inputNombre").val();
             let correo_usr = $("#inputCorreo").val();
@@ -200,6 +196,10 @@
                     return false;
                 }
             });
+            if ($(this).data("editar") == 1) {
+                obj["accion"] = "editar_usuario";
+                obj["id"] = $(this).data('id');
+            }
             $.post("includes/_funciones.php", obj, function (v) {
                 if (v == 0) {
                     $("#error").html("Campos vacios").fadeIn();
@@ -222,13 +222,21 @@
                 if (v == 7) {
                     $("#error").html("Favor de ingresar una contraseña").fadeIn();
                 }
+                if (v == 8) {
+                    alert("Usuario editado");
+                    location.reload();
+                }
+                if (v == 9) {
+                    alert("Se produjo un error, intente nuevamente");
+                    location.reload();
+                }
                 if (v == 1) {
                     alert("Usuario insertado");
                     location.reload();
                 }
             });
         });
-    //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD
+        //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD
         $("#main").on("click", ".eliminar_usuario", function (e) {
             e.preventDefault();
             let confirmacion = confirm('¿Desea eliminar este usuario?');
@@ -246,35 +254,31 @@
                 alert('El registro no se ha eliminado');
             }
         });
-    //FUNCION PARA EDITAR 1 REGISTRO EN LA BD
-        $("#main").on("click", ".editar_usuario", function (e) {
+        //FUNCION PARA CONSULTAR REGISTRO A EDITAR
+        $("#list-usuarios").on("click", ".editar_usuario", function (e) {
             e.preventDefault();
-            let confirmacion = confirm('¿Desea editar éste usuario?');
-            if (confirmacion) {
-                change_view('insert_data');
-                $("#h2-title").text("Editar Usuario");
-                //$("#guardar_datos").attr("id", "editar_datos").html("Editar");
-                let id = $(this).data('id'),
-                    nombre_usr = $("#inputNombre").val(),
-                    correo_usr = $("#inputCorreo").val(),
-                    telefono_usr = $("#inputTelefono").val(),
-                    password_usr = $("#inputPassword").val(),
-                    obj = {
-                        "accion": "editar_usuario",
-                        "nombre_usr": nombre_usr,
-                        "correo_usr": correo_usr,
-                        "telefono_usr": telefono_usr,
-                        "password_usr": password_usr,
-                        "id": id
-                    };
-                $.post("includes/_funciones.php", obj, function (respuesta) {
-                    //alert(respuesta);
-                    //consultar();
-                });
-            } else {
-                alert('El usuario no se ha editado');
-            }
+            let id = $(this).data('id'),
+            obj = {
+                "accion": "consultar_registro",
+                "id": id
+            };
+            $("#form_data")[0].reset();
+            change_view('insert_data');
+            $("#h2-title").text("Editar Usuario");
+            $("#guardar_datos").text("Editar").data("editar", 1).data("id",id);
+            $.post("includes/_funciones.php", obj, function (r) {
+                $("#inputNombre").val(r.nombre_usr);
+                $("#inputCorreo").val(r.correo_usr);
+                $("#inputTelefono").val(r.telefono_usr);
+                $("#inputPassword").val(r.password_usr);
+            }, "JSON");
         });
+        //CARGAR FUNCIONES CUANDO EL DOCUMENTO ESTE LISTO
+        $(document).ready(function () {
+            consultar();
+            change_view();
+        });
+        //BOTON CANCELAR
         $("#main").find(".cancelar").click(function () {
             change_view();
             $("#form_data")[0].reset();
