@@ -89,6 +89,9 @@ require_once("con_db.php");
 				//Si el usuario es correcto, imprimir 1
 				}elseif ($email == $row["correo_usr"] && $pass == $row["password_usr"]) {
 					echo "1";
+					session_start();
+					error_reporting(0);
+					$_SESSION['usuario'] = $email;
 				}
 			}
 		} 	
