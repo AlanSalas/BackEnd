@@ -2,6 +2,7 @@
 require_once("con_db.php");
 //Recibir variable post
 	switch ($_POST["accion"]) {
+	//USUARIOS
 		case 'login':
 			login();
 			break;
@@ -11,20 +12,46 @@ require_once("con_db.php");
 		case 'insertar_usuarios':
 			insertar_usuarios();
 			break;
-		case 'eliminar_usuario';
+		case 'eliminar_usuarios';
 			eliminar_usuarios($_POST['id']);
 			break;
-		case 'editar_usuario':
-			editar_usuario();
+		case 'editar_usuarios':
+			editar_usuarios();
 			break;
-		case 'consultar_registro':
-			consultar_registro($_POST['id']);
+		case 'consultar_registro_usuarios':
+			consultar_registro_usuarios($_POST['id']);
 			break;
+	//TEAM
 		case 'consultar_team':
 			consultar_team();
 			break;
-		case 'insertar_integrante':
-			insertar_integrante();
+		case 'insertar_integrantes':
+			insertar_integrantes();
+			break;
+		case 'eliminar_integrantes';
+			eliminar_integrantes($_POST['id']);
+			break;
+		case 'consultar_registro_integrantes':
+			consultar_registro_integrantes($_POST['id']);
+			break;
+		case 'editar_integrantes':
+			editar_integrantes();
+			break;
+	//TESTIMONIALS
+		case 'consultar_tes':
+			consultar_tes();
+			break;
+		case 'insertar_testimonials':
+			insertar_testimonials();
+			break;
+		case 'eliminar_testimonials';
+			eliminar_testimonials($_POST['id']);
+			break;
+		case 'consultar_registro_testimonials';
+			consultar_registro_testimonials($_POST['id']);
+			break;
+		case 'editar_testimonials':
+			editar_testimonials();
 			break;
 		default:
 			# code...
@@ -96,7 +123,7 @@ require_once("con_db.php");
 			echo "4";
 		}elseif (empty($telefono)) {
 			echo "5";
-		}elseif (preg_match($expresion, $telefono_usr)) {
+		}elseif (preg_match($expresion, $telefono)) {
 			echo "6";
 		}elseif (empty($pass)) {
 			echo "7";
@@ -118,7 +145,7 @@ require_once("con_db.php");
 		}
 	}
 
-	function editar_usuario(){
+	function editar_usuarios(){
 		global $mysqli;
 		extract($_POST);
 		$expresion = '/^[9|9|5][0-10]{8}$/';
@@ -149,7 +176,7 @@ require_once("con_db.php");
 		}
 	}
 
-	function consultar_registro($id){
+	function consultar_registro_usuarios($id){
 		global $mysqli;
 		$sql = "SELECT * FROM usuarios WHERE id_usr = $id";
 		$rsl = $mysqli->query($sql);
@@ -170,7 +197,7 @@ require_once("con_db.php");
 		echo json_encode($array); //Imprime Json encodeado	
 	}
 
-	function insertar_integrante(){
+	function insertar_integrantes(){
 		//Conectar a la bd
 		global $mysqli;
 		$nombre = $_POST['nombre'];
@@ -178,7 +205,6 @@ require_once("con_db.php");
 		$pass = $_POST['password'];
 		$puesto = $_POST['puesto'];
 		$descripcion = $_POST['descripcion'];
-		$foto = $_POST['foto'];
 		$fb = $_POST['fb'];
 		$tw = $_POST['tw'];
 		$lk = $_POST['lk'];
@@ -197,8 +223,6 @@ require_once("con_db.php");
 			echo "6";
 		}elseif (empty($descripcion)) {
 			echo "7";
-		}elseif (empty($foto)) {
-			echo "8";
 		}elseif (empty($fb)) {
 			echo "9";
 		}elseif (empty($tw)) {
@@ -206,9 +230,153 @@ require_once("con_db.php");
 		}elseif (empty($lk)) {
 			echo "11";
 		}else{
-			$sql = "INSERT INTO team VALUES('', '$nombre', '$correo', '$pass', '$puesto', '$descripcion', '$foto', '$fb', '$tw', '$lk')";
+			$sql = "INSERT INTO team VALUES('', '$nombre', '$correo', '$pass', '$puesto', '$descripcion', '$fb', '$tw', '$lk')";
 			$rsl = $mysqli->query($sql);
 			echo "1";
 		}	
-	}	
+	}
+	
+	function eliminar_integrantes($id){
+		global $mysqli;
+		$sql = "DELETE FROM team WHERE id_team = $id";
+		$rsl = $mysqli->query($sql);
+		if ($rsl) {
+			echo "Se elimino correctamente";
+		}else{
+			echo "Se genero un error, intenta nuevamente";
+		}
+	}
+
+	function consultar_registro_integrantes($id){
+		global $mysqli;
+		$sql = "SELECT * FROM team WHERE id_team = $id";
+		$rsl = $mysqli->query($sql);
+		$fila = mysqli_fetch_array($rsl);
+		echo json_encode($fila); //Imprime Json encodeado	
+	}
+
+	function editar_integrantes(){
+		//Conectar a la bd
+		global $mysqli;
+		$nombre = $_POST['nombre'];
+		$correo = $_POST['correo'];
+		$pass = $_POST['password'];
+		$puesto = $_POST['puesto'];
+		$descripcion = $_POST['descripcion'];
+		$fb = $_POST['fb'];
+		$tw = $_POST['tw'];
+		$lk = $_POST['lk'];
+		$id = $_POST['id'];
+		//Validacion de campos vacios
+		if (empty($nombre) && empty($correo) && empty($pass) && empty($puesto) && empty($descripcion) && empty($foto) && empty($fb) && empty($tw) && empty($lk)) {
+			echo "0";
+		}elseif (empty($nombre)) {
+			echo "2";
+		}elseif (empty($correo)) {
+			echo "3";
+		}elseif ($correo != filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+			echo "4";
+		}elseif (empty($pass)) {
+			echo "5";
+		}elseif (empty($puesto)) {
+			echo "6";
+		}elseif (empty($descripcion)) {
+			echo "7";
+		}elseif (empty($fb)) {
+			echo "9";
+		}elseif (empty($tw)) {
+			echo "10";
+		}elseif (empty($lk)) {
+			echo "11";
+		}else{
+			$sql = "UPDATE team SET nombre = '$nombre', correo = '$correo', password = '$pass', puesto = '$puesto', descripcion = '$descripcion', facebook_link = '$fb', twitter_link = '$tw', linkedin_link = '$lk' WHERE id_team = '$id'";
+			$rsl = $mysqli->query($sql);
+			if ($rsl) {
+				echo "12";
+			}else{
+				echo "13";
+			}
+		}	
+	}
+	//------------------------------FUNCIONES MODULO TESTIMONIALS------------------------------//
+	function consultar_tes(){
+		//Conectar a la BD
+		global $mysqli;
+		//Realizar consulta
+		$sql = "SELECT * FROM testimonials";
+		$rsl = $mysqli->query($sql);
+		$array = [];
+		while ($row = mysqli_fetch_array($rsl)) {
+			array_push($array, $row);
+		}
+		echo json_encode($array); //Imprime Json encodeado
+	}
+
+	function insertar_testimonials(){
+		//Conectar a la bd
+		global $mysqli;
+		$nombre = $_POST['nombre'];
+		$puesto = $_POST['puesto'];
+		$mensaje = $_POST['mensaje'];
+		//Validacion de campos vacios
+		if (empty($nombre) && empty($puesto) && empty($mensaje)) {
+			echo "0";
+		}elseif (empty($nombre)) {
+			echo "2";
+		}elseif (empty($puesto)) {
+			echo "3";
+		}elseif (empty($mensaje)) {
+			echo "4";
+		}else{
+			$sql = "INSERT INTO testimonials VALUES('', '$nombre', '$puesto', '$mensaje')";
+			$rsl = $mysqli->query($sql);
+			echo "1";
+		}	
+	}
+
+	function eliminar_testimonials($id){
+		global $mysqli;
+		$sql = "DELETE FROM testimonials WHERE id_tes = $id";
+		$rsl = $mysqli->query($sql);
+		if ($rsl) {
+			echo "Se elimino correctamente";
+		}else{
+			echo "Se genero un error, intenta nuevamente";
+		}
+	}
+
+	function consultar_registro_testimonials($id){
+		global $mysqli;
+		$sql = "SELECT * FROM testimonials WHERE id_tes = $id";
+		$rsl = $mysqli->query($sql);
+		$fila = mysqli_fetch_array($rsl);
+		echo json_encode($fila); //Imprime Json encodeado	
+	}
+
+	function editar_testimonials(){
+		//Conectar a la bd
+		global $mysqli;
+		$nombre = $_POST['nombre'];
+		$puesto = $_POST['puesto'];
+		$mensaje = $_POST['mensaje'];
+		$id = $_POST['id'];
+		//Validacion de campos vacios
+		if (empty($nombre) && empty($puesto) && empty($mensaje)) {
+			echo "0";
+		}elseif (empty($nombre)) {
+			echo "2";
+		}elseif (empty($puesto)) {
+			echo "3";
+		}elseif (empty($mensaje)) {
+			echo "4";
+		}else{
+			$sql = "UPDATE testimonials SET nombre_tes = '$nombre', puesto_tes = '$puesto', mensaje_tes = '$mensaje' WHERE id_tes = '$id'";
+			$rsl = $mysqli->query($sql);
+			if ($rsl) {
+				echo "5";
+			}else{
+				echo "6";
+			}
+		}	
+	}
 ?>

@@ -41,27 +41,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="bar-chart-2"></span>
-                                Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers"></span>
-                                Integrations
+                            <a class="nav-link" href="testimonials.php">
+                                Testimonials
                             </a>
                         </li>
                     </ul>
@@ -92,7 +73,7 @@
                     </table>
                 </div>
                 <div id="insert_data" class="view">
-                    <form action="#" id="form_data">
+                    <form action="#" id="form_data" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -102,6 +83,13 @@
                                 <div class="form-group">
                                     <label for="correo">Correo Electrónico</label>
                                     <input type="email" id="inputCorreo" name="correo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="foto">Foto</label>
+                                    <input type="file" id="inputFoto" name="foto" class="form-control" style="color: transparent";>
+                                    <input type="text" name="ruta" id="ruta">
+                                </div>
+                                <div id="preview">
                                 </div>
                             </div>
                             <div class="col">
@@ -137,12 +125,10 @@
         //FUNCION PARA CAMBIAR VISTA
         function change_view(vista = 'show_data') {
             $("#main").find(".view").each(function () {
-                // $(this).addClass("d-none");
                 $(this).slideUp('fast');
                 let id = $(this).attr("id");
                 if (vista == id) {
                     $(this).slideDown(300);
-                    // $(this).removeClass("d-none");
                 }
             });
         }
@@ -160,8 +146,8 @@
           <td>${e.nombre_usr}</td>
           <td>${e.telefono_usr}</td>
           <td>
-          <a href="#" data-id="${e.id_usr}" class="editar_usuario">Editar</a>
-          <a href="#" data-id="${e.id_usr}" class="eliminar_usuario">Eliminar</a>
+          <a href="#" data-id="${e.id_usr}" class="editar_usuarios">Editar</a>
+          <a href="#" data-id="${e.id_usr}" class="eliminar_usuarios">Eliminar</a>
           </td>
           </tr>
           `;
@@ -173,6 +159,8 @@
         $("#nuevo_registro").click(function () {
             change_view('insert_data');
             $("#h2-title").text("Insertar Usuario");
+            $("#guardar_datos").text("Guardar").data("editar", 0);
+            $("#form_data")[0].reset();
         });
         //FUNCION PARA INSERTAR DATOS A LA BD
         $("#guardar_datos").click(function () {
@@ -197,7 +185,7 @@
                 }
             });
             if ($(this).data("editar") == 1) {
-                obj["accion"] = "editar_usuario";
+                obj["accion"] = "editar_usuarios";
                 obj["id"] = $(this).data('id');
             }
             $.post("includes/_funciones.php", obj, function (v) {
@@ -237,13 +225,13 @@
             });
         });
         //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD
-        $("#main").on("click", ".eliminar_usuario", function (e) {
+        $("#main").on("click", ".eliminar_usuarios", function (e) {
             e.preventDefault();
             let confirmacion = confirm('¿Desea eliminar este usuario?');
             if (confirmacion) {
                 let id = $(this).data('id'),
                     obj = {
-                        "accion": "eliminar_usuario",
+                        "accion": "eliminar_usuarios",
                         "id": id
                     };
                 $.post("includes/_funciones.php", obj, function (respuesta) {
@@ -255,17 +243,17 @@
             }
         });
         //FUNCION PARA CONSULTAR REGISTRO A EDITAR
-        $("#list-usuarios").on("click", ".editar_usuario", function (e) {
+        $("#list-usuarios").on("click", ".editar_usuarios", function (e) {
             e.preventDefault();
             let id = $(this).data('id'),
-            obj = {
-                "accion": "consultar_registro",
-                "id": id
-            };
+                obj = {
+                    "accion": "consultar_registro_usuarios",
+                    "id": id
+                };
             $("#form_data")[0].reset();
             change_view('insert_data');
             $("#h2-title").text("Editar Usuario");
-            $("#guardar_datos").text("Editar").data("editar", 1).data("id",id);
+            $("#guardar_datos").text("Editar").data("editar", 1).data("id", id);
             $.post("includes/_funciones.php", obj, function (r) {
                 $("#inputNombre").val(r.nombre_usr);
                 $("#inputCorreo").val(r.correo_usr);
