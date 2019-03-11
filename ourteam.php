@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <h2 id = "h2-title">Consultar Team</h2>
+                <h2 id="h2-title">Consultar Team</h2>
                 <div class="table-responsive view" id="show_data">
                     <table class="table table-striped table-sm" id="list-usuarios">
                         <thead>
@@ -97,7 +97,7 @@
                                 <div class="form-group">
                                     <label for="descripcion">Descripción</label>
                                     <input type="text" id="inputDescripcion" name="descripcion" class="form-control">
-                                </div>  
+                                </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
@@ -193,15 +193,15 @@
             let lk = $("#inputLk").val();
             let obj = {
                 "accion": "insertar_integrantes",
-                "nombre" : nombre,
-                "correo" : correo,
-                "password" : password,
-                "puesto" : puesto,
-                "descripcion" : descripcion,
-                "foto" : foto,
-                "fb" : fb,
-                "tw" : tw,
-                "lk" : lk
+                "nombre": nombre,
+                "correo": correo,
+                "password": password,
+                "puesto": puesto,
+                "descripcion": descripcion,
+                "foto": foto,
+                "fb": fb,
+                "tw": tw,
+                "lk": lk
             }
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
@@ -217,40 +217,51 @@
                 obj["id"] = $(this).data('id');
             }
             $.post("includes/_funciones.php", obj, function (v) {
-            if (v == 0) {
-                $("#error").html("Campos vacios").fadeIn();
-            }if (v == 1) {
-                alert("Integrante Insertado");
-                location.reload();
-            }if (v == 2) {
-                $("#error").html("Favor de ingresar tu nombre").fadeIn();
-            }if (v == 3) {
-                $("#error").html("Favor de ingresar un correo electronico").fadeIn();
-            }if (v == 4) {
-                $("#error").html("Favor de ingresar un correo electronico valido").fadeIn();
-            }if (v == 5) {
-                $("#error").html("Favor de ingresar una contraseña").fadeIn();
-            }if (v == 6) {
-                $("#error").html("Favor de ingresar su puesto").fadeIn();
-            }if (v == 7) {
-                $("#error").html("Favor de añadir una descripción").fadeIn();
-            }if (v == 8) {
-                $("#error").html("Favor de añadir una foto").fadeIn();
-            }if (v == 9) {
-                $("#error").html("Favor de añadir link a Facebook").fadeIn();
-            }if (v == 10) {
-                $("#error").html("Favor de añadir link a Twitter").fadeIn();
-            }if (v == 11) {
-                $("#error").html("Favor de añadir link a Linkedin").fadeIn();
-            }
-            if (v == 12) {
-                alert("Integrante editado");
-                location.reload();
-            }
-            if (v == 13) {
-                alert("Se produjo un error, intente nuevamente");
-                location.reload();
-            }
+                if (v == 0) {
+                    $("#error").html("Campos vacios").fadeIn();
+                }
+                if (v == 1) {
+                    alert("Integrante Insertado");
+                    location.reload();
+                }
+                if (v == 2) {
+                    $("#error").html("Favor de ingresar tu nombre").fadeIn();
+                }
+                if (v == 3) {
+                    $("#error").html("Favor de ingresar un correo electronico").fadeIn();
+                }
+                if (v == 4) {
+                    $("#error").html("Favor de ingresar un correo electronico valido").fadeIn();
+                }
+                if (v == 5) {
+                    $("#error").html("Favor de ingresar una contraseña").fadeIn();
+                }
+                if (v == 6) {
+                    $("#error").html("Favor de ingresar su puesto").fadeIn();
+                }
+                if (v == 7) {
+                    $("#error").html("Favor de añadir una descripción").fadeIn();
+                }
+                if (v == 8) {
+                    $("#error").html("Favor de añadir una foto").fadeIn();
+                }
+                if (v == 9) {
+                    $("#error").html("Favor de añadir link a Facebook").fadeIn();
+                }
+                if (v == 10) {
+                    $("#error").html("Favor de añadir link a Twitter").fadeIn();
+                }
+                if (v == 11) {
+                    $("#error").html("Favor de añadir link a Linkedin").fadeIn();
+                }
+                if (v == 12) {
+                    alert("Integrante editado");
+                    location.reload();
+                }
+                if (v == 13) {
+                    alert("Se produjo un error, intente nuevamente");
+                    location.reload();
+                }
             });
         });
         //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD

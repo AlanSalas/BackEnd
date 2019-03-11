@@ -21,6 +21,9 @@ require_once("con_db.php");
 		case 'consultar_registro_usuarios':
 			consultar_registro_usuarios($_POST['id']);
 			break;
+		case 'carga_foto':
+			carga_foto();
+			break;
 	//TEAM
 		case 'consultar_team':
 			consultar_team();
@@ -109,6 +112,7 @@ require_once("con_db.php");
 		global $mysqli;
 		$nombre = $_POST['nombre_usr'];
 		$correo = $_POST['correo_usr'];
+		$foto = $_POST['foto'];
 		$telefono = $_POST['telefono_usr'];
 		$pass = $_POST['password_usr'];
 		$expresion = '/^[9|9|5][0-10]{8}$/';
@@ -121,6 +125,8 @@ require_once("con_db.php");
 			echo "3";
 		}elseif ($correo != filter_var($correo, FILTER_VALIDATE_EMAIL)) {
 			echo "4";
+		}elseif (empty($foto)) {
+			echo "10";
 		}elseif (empty($telefono)) {
 			echo "5";
 		}elseif (preg_match($expresion, $telefono)) {
@@ -182,6 +188,26 @@ require_once("con_db.php");
 		$rsl = $mysqli->query($sql);
 		$fila = mysqli_fetch_array($rsl);
 		echo json_encode($fila); //Imprime Json encodeado	
+	}
+
+	function carga_foto(){
+		if (isset($_FILES["foto"])) {
+			$file = $_FILES["foto"];
+			$nombre = $_FILES["foto"]["name"];
+			$temporal = $_FILES["foto"]["tmp_name"];
+			$tipo = $_FILES["foto"]["type"];
+			$tam = $_FILES["foto"]["size"];
+			$dir = "../img/usuarios/";
+			$respuesta = [
+				"archivo" => "img/usuarios/logotipo.png",
+				"status" => 0
+			];
+			if(move_uploaded_file($temporal, $dir.$nombre)){
+				$respuesta["archivo"] = "img/usuarios/".$nombre;
+				$respuesta["status"] = 1;
+			}
+			echo json_encode($respuesta);
+		}
 	}
 	//------------------------------FUNCIONES MODULO OUR TEAM------------------------------//
 	function consultar_team(){

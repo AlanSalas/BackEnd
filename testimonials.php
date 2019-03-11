@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <h2 id = "h2-title">Consultar Testimonials</h2>
+                <h2 id="h2-title">Consultar Testimonials</h2>
                 <div class="table-responsive view" id="show_data">
                     <table class="table table-striped table-sm" id="list-usuarios">
                         <thead>
@@ -90,7 +90,7 @@
                                 <div class="form-group">
                                     <label for="descripcion">Mensaje</label>
                                     <input type="text" id="inputMensaje" name="descripcion" class="form-control">
-                                </div>  
+                                </div>
                                 <div class="form-group">
                                     <label for="foto">Foto</label>
                                     <input type="file" id="inputFoto" name="foto" class="form-control">
@@ -164,9 +164,9 @@
             let mensaje = $("#inputMensaje").val();
             let obj = {
                 "accion": "insertar_testimonials",
-                "nombre" : nombre,
-                "puesto" : puesto,
-                "mensaje" : mensaje
+                "nombre": nombre,
+                "puesto": puesto,
+                "mensaje": mensaje
             }
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
@@ -182,25 +182,30 @@
                 obj["id"] = $(this).data('id');
             }
             $.post("includes/_funciones.php", obj, function (v) {
-            if (v == 0) {
-                $("#error").html("Campos vacios").fadeIn();
-            }if (v == 1) {
-                alert("Testimonio Insertado");
-                location.reload();
-            }if (v == 2) {
-                $("#error").html("Favor de ingresar tu nombre").fadeIn();
-            }if (v == 3) {
-                $("#error").html("Favor de ingresar su puesto").fadeIn();
-            }if (v == 4) {
-                $("#error").html("Favor de añadir un mensaje").fadeIn();
-            }if (v == 5) {
-                alert("Testimonio editado");
-                location.reload();
-            }
-            if (v == 6) {
-                alert("Se produjo un error, intente nuevamente");
-                location.reload();
-            }
+                if (v == 0) {
+                    $("#error").html("Campos vacios").fadeIn();
+                }
+                if (v == 1) {
+                    alert("Testimonio Insertado");
+                    location.reload();
+                }
+                if (v == 2) {
+                    $("#error").html("Favor de ingresar tu nombre").fadeIn();
+                }
+                if (v == 3) {
+                    $("#error").html("Favor de ingresar su puesto").fadeIn();
+                }
+                if (v == 4) {
+                    $("#error").html("Favor de añadir un mensaje").fadeIn();
+                }
+                if (v == 5) {
+                    alert("Testimonio editado");
+                    location.reload();
+                }
+                if (v == 6) {
+                    alert("Se produjo un error, intente nuevamente");
+                    location.reload();
+                }
             });
         });
         //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD

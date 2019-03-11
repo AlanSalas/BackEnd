@@ -85,12 +85,10 @@
                                     <input type="email" id="inputCorreo" name="correo" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="foto">Foto</label>
-                                    <input type="file" id="inputFoto" name="foto" class="form-control" style="color: transparent";>
-                                    <input type="text" name="ruta" id="ruta">
+                                    <input type="file" name="foto" id="foto">
+                                    <input type="hidden" name="ruta" id="ruta" readonly="readonly">
                                 </div>
-                                <div id="preview">
-                                </div>
+                                <div id="preview"></div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
@@ -166,12 +164,14 @@
         $("#guardar_datos").click(function () {
             let nombre_usr = $("#inputNombre").val();
             let correo_usr = $("#inputCorreo").val();
+            let foto = $("#foto").val();
             let telefono_usr = $("#inputTelefono").val();
             let password_usr = $("#inputPassword").val();
             let obj = {
                 "accion": "insertar_usuarios",
                 "nombre_usr": nombre_usr,
                 "correo_usr": correo_usr,
+                "foto": foto,
                 "telefono_usr": telefono_usr,
                 "password_usr": password_usr
             }
@@ -217,6 +217,9 @@
                 if (v == 9) {
                     alert("Se produjo un error, intente nuevamente");
                     location.reload();
+                }
+                if (v == 10) {
+                    $("#error").html("Favor de ingresar una foto").fadeIn();
                 }
                 if (v == 1) {
                     alert("Usuario insertado");
@@ -265,6 +268,29 @@
         $(document).ready(function () {
             consultar();
             change_view();
+        });
+        $("#foto").on("change", function (e) {
+            let formDatos = new FormData($("#form_data")[0]);
+            formDatos.append("accion", "carga_foto");
+            $.ajax({
+                url: "includes/_funciones.php",
+                type: "POST",
+                data: formDatos,
+                contentType: false,
+                processData: false,
+                success: function (datos) {
+                    let respuesta = JSON.parse(datos);
+                    if (respuesta.status == 0) {
+                        alert("No se cargó la foto");
+                    }
+                    let template =
+                        `
+          <img src="${respuesta.archivo}" alt="" class="img-fluid" />
+          `;
+                    $("#ruta").val(respuesta.archivo);
+                    $("#preview").html(template);
+                }
+            });
         });
         //BOTON CANCELAR
         $("#main").find(".cancelar").click(function () {
