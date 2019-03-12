@@ -27,7 +27,7 @@
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="index.php">Sign out</a>
+                <a class="nav-link" href="includes/log_out.php">Sign out</a>
             </li>
         </ul>
     </nav>
@@ -43,6 +43,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="works.php">
+                                Works
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link active" href="ourteam.php">
                                 Our Team
                             </a>
@@ -50,6 +55,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="testimonials.php">
                                 Testimonials
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="download.php">
+                                Download
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="footer.php">
+                                Footer
                             </a>
                         </li>
                     </ul>
@@ -73,7 +88,6 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Puesto</th>
-                                <th>Descripción</th>
                                 <th>Foto</th>
                                 <th>Acciones</th>
                             </tr>
@@ -108,10 +122,6 @@
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="foto">Foto</label>
-                                    <input type="file" id="inputFoto" name="foto" class="form-control">
-                                </div>
-                                <div class="form-group">
                                     <label for="fb-link">Facebook Link</label>
                                     <input type="text" id="inputFb" name="fb-link" class="form-control">
                                 </div>
@@ -123,6 +133,12 @@
                                     <label for="lk-link">Linkedin Link</label>
                                     <input type="text" id="inputLk" name="lk-link" class="form-control">
                                 </div>
+                                <div class="form-group">
+                                    <label for="img">Foto:</label>
+                                    <input type="file" name="foto" id="foto">
+                                    <input type="hidden" name="ruta" id="ruta" readonly="readonly">
+                                </div>
+                                <div id="preview"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -169,8 +185,7 @@
           <tr>
           <td>${e.nombre}</td>
           <td>${e.puesto}</td>
-          <td>${e.descripcion}</td>
-          <td>${e.foto}</td>
+          <td><img src="${e.img_team}" class="img-thumbnail" width="100" height="100"/></td>
           <td><a href="#" data-id="${e.id_team}" class = "editar_integrantes" >Editar</a>
           <a href="#" data-id="${e.id_team}" class = "eliminar_integrantes">Eliminar</a>
           </td>
@@ -185,6 +200,8 @@
             change_view('insert_data');
             $("#h2-title").text("Insertar Integrante");
             $("#guardar_datos").text("Guardar").data("editar", 0);
+            $("#preview").html("");
+            $('#ruta').attr('value', '');
             $("#form_data")[0].reset();
         });
         //FUNCION PARA INSERTAR DATOS A LA BD
@@ -194,10 +211,10 @@
             let password = $("#inputPassword").val();
             let puesto = $("#inputPuesto").val();
             let descripcion = $("#inputDescripcion").val();
-            let foto = $("#inputFoto").val();
             let fb = $("#inputFb").val();
             let tw = $("#inputTw").val();
             let lk = $("#inputLk").val();
+            let img_team = $("#ruta").val();
             let obj = {
                 "accion": "insertar_integrantes",
                 "nombre": nombre,
@@ -205,10 +222,10 @@
                 "password": password,
                 "puesto": puesto,
                 "descripcion": descripcion,
-                "foto": foto,
                 "fb": fb,
                 "tw": tw,
-                "lk": lk
+                "lk": lk,
+                "img_team": img_team
             }
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
@@ -307,16 +324,45 @@
                 $("#inputPassword").val(r.password);
                 $("#inputPuesto").val(r.puesto);
                 $("#inputDescripcion").val(r.descripcion);
-                //$("#inputFoto").val(r.foto);
                 $("#inputFb").val(r.facebook_link);
                 $("#inputTw").val(r.twitter_link);
                 $("#inputLk").val(r.linkedin_link);
+                let template =
+                    `
+                    <img src="${r.img_team}" class="img-thumbnail" width="200" height="200"/>
+                    `;
+                $("#ruta").val(r.img_team);
+                $("#preview").html(template);
             }, "JSON");
         });
         //CARGAR FUNCIONES CUANDO EL DOCUMENTO ESTE LISTO
         $(document).ready(function () {
             consultar();
             change_view();
+        });
+        //FUNCION PARA GUARDAR IMAGENES
+        $("#foto").on("change", function (e) {
+            let formDatos = new FormData($("#form_data")[0]);
+            formDatos.append("accion", "carga_foto");
+            $.ajax({
+                url: "includes/_funciones.php",
+                type: "POST",
+                data: formDatos,
+                contentType: false,
+                processData: false,
+                success: function (datos) {
+                    let respuesta = JSON.parse(datos);
+                    if (respuesta.status == 0) {
+                        alert("No se cargó la foto");
+                    }
+                    let template =
+                        `
+          <img src="${respuesta.archivo}" class="img-thumbnail" width="200" height="200"/>
+          `;
+                    $("#ruta").val(respuesta.archivo);
+                    $("#preview").html(template);
+                }
+            });
         });
         //BOTON CANCELAR
         $("#main").find(".cancelar").click(function () {
@@ -328,6 +374,11 @@
             $("#error").hide();
             $("#success").hide();
             $("#h2-title").text("Consultar Team");
+            $("#preview").html("");
+            if ($("#guardar_datos").data("editar") == 1) {
+                $("#guardar_datos").text("Guardar").data("editar", 0);
+                consultar();
+            }
         });
     </script>
 </body>

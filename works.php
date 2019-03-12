@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Testimonials</title>
+    <title>Works</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
@@ -23,7 +23,7 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="testimonials.php">Testimonials</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Works</a>
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -43,7 +43,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="works.php">
+                            <a class="nav-link active" href="works.php">
                                 Works
                             </a>
                         </li>
@@ -53,7 +53,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="testimonials.php">
+                            <a class="nav-link" href="testimonials.php">
                                 Testimonials
                             </a>
                         </li>
@@ -73,7 +73,7 @@
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="main">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Testimonials</h1>
+                    <h1 class="h2">Works</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
                             <button type="button" class="btn btn-sm btn-outline-danger cancelar">Cancelar</button>
@@ -81,81 +81,75 @@
                         </div>
                     </div>
                 </div>
-                <h2 id="h2-title">Consultar Testimonials</h2>
+                <h2>Works</h2>
                 <div class="table-responsive view" id="show_data">
-                    <table class="table table-striped table-sm" id="list-usuarios">
+                    <table class="table table-striped table-sm" id="list-works">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Puesto</th>
-                                <th>Mensaje</th>
-                                <th>Foto</th>
+                                <th>Project Name</th>
+                                <th>Description</th>
+                                <th>Image</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
+
+
                 <div id="insert_data" class="view">
-                    <form action="#" id="form_data" enctype="multipart/form-data">
+                    <form action="#" id="form_data">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" id="inputNombre" name="nombre" class="form-control">
+                                    <label for="pname">Project Name</label>
+                                    <input type="text" id="pname_work" name="pname" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="puesto">Puesto</label>
-                                    <input type="puesto" id="inputPuesto" name="puesto" class="form-control">
+                                    <label for="description">Descripción</label>
+                                    <input type="text" id="description_work" name="description" class="form-control">
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="descripcion">Mensaje</label>
-                                    <input type="text" id="inputMensaje" name="descripcion" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="img">Foto:</label>
+                                    <label for="img">Imagen</label>
                                     <input type="file" name="foto" id="foto">
-                                    <input type="hidden" name="ruta" id="ruta" readonly="readonly">
+                                    <input type="hidden" readonly="readonly" name="ruta" id="ruta">
+                                    <div id="preview"></div>
                                 </div>
-                                <div id="preview"></div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-success" id="guardar_datos">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <button type="button" class="btn btn-success" id="guardar_datos">Guardar</button>
-                    </div>
-                </div>
-                <div class="mensaje">
-                    <span class="alert alert-danger" id="error" style='display:none;'></span>
-                    <span class="alert alert-success" id="success" style='display:none;'></span>
-                </div>
-                </form>
+            </main>
         </div>
-        </main>
-    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script>
-        //FUNCION PARA CAMBIAR VISTA
         function change_view(vista = 'show_data') {
             $("#main").find(".view").each(function () {
+                // $(this).addClass("d-none");
                 $(this).slideUp('fast');
                 let id = $(this).attr("id");
                 if (vista == id) {
                     $(this).slideDown(300);
+                    // $(this).removeClass("d-none");
                 }
             });
         }
-        //FUNCION PARA CONSULTAR A LA BD
+
         function consultar() {
             let obj = {
-                "accion": "consultar_tes"
+                "accion": "consultar_works"
+
             };
             $.post("includes/_funciones.php", obj, function (respuesta) {
                 let template = ``;
@@ -163,134 +157,111 @@
                     template +=
                         `
           <tr>
-          <td>${e.nombre_tes}</td>
-          <td>${e.puesto_tes}</td>
-          <td>${e.mensaje_tes}</td>
-          <td><img src="${e.foto_tes}" class="img-thumbnail" width="100" height="100"/></td>
+          <td>${e.pname_work}</td>
+          <td>${e.description_work}</td>
+          <td><img src="${e.img_work}" class="img-thumbnail" width="100" height="100"/></td>
           <td>
-          <a href="#" data-id="${e.id_tes}" class = "editar_testimonials" >Editar</a>
-          <a href="#" data-id="${e.id_tes}" class = "eliminar_testimonials">Eliminar</a>
+          <a href="#" data-id="${e.id_work}" class="editar_registro">Editar</a>
+          <a href="#" data-id="${e.id_work}" class="eliminar_registro">Eliminar</a>
           </td>
           </tr>
           `;
                 });
-                $("#list-usuarios tbody").html(template);
+                $("#list-works tbody").html(template);
             }, "JSON");
         }
-        //FUNCION PARA CAMBIAR VISTA -> FORMULARIO
+        $(document).ready(function () {
+            consultar();
+            change_view();
+        });
         $("#nuevo_registro").click(function () {
             change_view('insert_data');
-            $("#h2-title").text("Insertar Testimonio");
             $("#guardar_datos").text("Guardar").data("editar", 0);
             $("#preview").html("");
             $('#ruta').attr('value', '');
             $("#form_data")[0].reset();
         });
-        //FUNCION PARA INSERTAR DATOS A LA BD
         $("#guardar_datos").click(function () {
-            let nombre = $("#inputNombre").val();
-            let puesto = $("#inputPuesto").val();
-            let mensaje = $("#inputMensaje").val();
-            let foto_tes = $("#ruta").val();
+            let pname_work = $('#pname_work').val();
+            let description_work = $('#description_work').val();
+            let img_work = $('#ruta').val();
             let obj = {
-                "accion": "insertar_testimonials",
-                "nombre": nombre,
-                "puesto": puesto,
-                "mensaje": mensaje,
-                "foto_tes": foto_tes
-            }
+                "accion": "insertar_works",
+                "pname_work": pname_work,
+                "description_work": description_work,
+                "img_work": img_work
+            };
             $("#form_data").find("input").each(function () {
                 $(this).removeClass("has-error");
                 if ($(this).val() != "") {
                     obj[$(this).prop("name")] = $(this).val();
                 } else {
-                    $(this).addClass("has-error");
+                    $(this).addClass("has-error").focus();
                     return false;
                 }
             });
             if ($(this).data("editar") == 1) {
-                obj["accion"] = "editar_testimonials";
-                obj["id"] = $(this).data('id');
+                obj["accion"] = "editar_works";
+                obj["id"] = $(this).data("id");
+                $(this).text("Guardar").data("editar", 0);
+                $("#form_data")[0].reset();
             }
-            $.post("includes/_funciones.php", obj, function (v) {
-                if (v == 0) {
-                    $("#error").html("Campos vacios").fadeIn();
+            $.post("includes/_funciones.php", obj, function (respuesta) {
+                alert(respuesta);
+                if (respuesta == "Se inserto el work en la BD ") {
+                    change_view();
+                    consultar();
                 }
-                if (v == 1) {
-                    alert("Testimonio Insertado");
-                    location.reload();
-                }
-                if (v == 2) {
-                    $("#error").html("Favor de ingresar tu nombre").fadeIn();
-                }
-                if (v == 3) {
-                    $("#error").html("Favor de ingresar su puesto").fadeIn();
-                }
-                if (v == 4) {
-                    $("#error").html("Favor de añadir un mensaje").fadeIn();
-                }
-                if (v == 7) {
-                    $("#error").html("Favor de añadir una imagen").fadeIn();
-                }
-                if (v == 5) {
-                    alert("Testimonio editado");
-                    location.reload();
-                }
-                if (v == 6) {
-                    alert("Se produjo un error, intente nuevamente");
+                if (respuesta == "Se edito el work correctamente") {
                     change_view();
                     consultar();
                 }
             });
         });
-        //FUNCION PARA ELIMINAR 1 REGISTRO EN LA BD
-        $("#main").on("click", ".eliminar_testimonials", function (e) {
+        //EDITAR
+        $('#list-works').on("click", ".editar_registro", function (e) {
             e.preventDefault();
-            let confirmacion = confirm('¿Desea eliminar este testimonio?');
+            let id = $(this).data('id'),
+                obj = {
+                    "accion": "editar_registrow",
+                    "id": id
+                };
+            $("#form_data")[0].reset();
+            change_view('insert_data');
+            $("#guardar_datos").text("Editar").data("editar", 1).data("id", id);
+            $.post("includes/_funciones.php", obj, function (r) {
+                $("#pname_work").val(r.pname_work);
+                $("#description_work").val(r.description_work);
+                let template =
+                    `
+                    <img src="${r.img_work}" class="img-thumbnail" width="200" height="200"/>
+                    `;
+                $("#ruta").val(r.img_work);
+                $("#preview").html(template);
+
+            }, "JSON");
+
+        });
+        /* Eliminar */
+        $("#main").on("click", ".eliminar_registro", function (e) {
+            e.preventDefault();
+            let confirmacion = confirm('Desea eliminar este registro?');
             if (confirmacion) {
                 let id = $(this).data('id'),
                     obj = {
-                        "accion": "eliminar_testimonials",
+                        "accion": "eliminar_works",
                         "id": id
                     };
                 $.post("includes/_funciones.php", obj, function (respuesta) {
                     alert(respuesta);
                     consultar();
                 });
+
             } else {
-                alert('El testimonio no se ha eliminado');
+                alert('El registro no se ha eliminado intente nuevamente');
             }
         });
-        //FUNCION PARA CONSULTAR REGISTRO A EDITAR
-        $("#list-usuarios").on("click", ".editar_testimonials", function (e) {
-            e.preventDefault();
-            let id = $(this).data('id'),
-                obj = {
-                    "accion": "consultar_registro_testimonials",
-                    "id": id
-                };
-            $("#form_data")[0].reset();
-            change_view('insert_data');
-            $("#h2-title").text("Editar Testimonio");
-            $("#guardar_datos").text("Editar").data("editar", 1).data("id", id);
-            $.post("includes/_funciones.php", obj, function (r) {
-                $("#inputNombre").val(r.nombre_tes);
-                $("#inputPuesto").val(r.puesto_tes);
-                $("#inputMensaje").val(r.mensaje_tes);
-                let template =
-                    `
-                    <img src="${r.foto_tes}" class="img-thumbnail" width="200" height="200"/>
-                    `;
-                $("#ruta").val(r.foto_tes);
-                $("#preview").html(template);
-            }, "JSON");
-        });
-        //CARGAR FUNCIONES CUANDO EL DOCUMENTO ESTE LISTO
-        $(document).ready(function () {
-            consultar();
-            change_view();
-        });
-        //FUNCION PARA GUARDAR IMAGENES
+        //FOTO
         $("#foto").on("change", function (e) {
             let formDatos = new FormData($("#form_data")[0]);
             formDatos.append("accion", "carga_foto");
@@ -303,29 +274,21 @@
                 success: function (datos) {
                     let respuesta = JSON.parse(datos);
                     if (respuesta.status == 0) {
-                        alert("No se cargó la foto");
+                        alert("no se cargo la foto xd");
                     }
                     let template =
                         `
-          <img src="${respuesta.archivo}" class="img-thumbnail" width="200" height="200"/>
-          `;
+                    <img src="${respuesta.archivo}" class="img-thumbnail" width="200" height="200"/>
+                    `;
                     $("#ruta").val(respuesta.archivo);
                     $("#preview").html(template);
                 }
             });
         });
-        //BOTON CANCELAR
         $("#main").find(".cancelar").click(function () {
             change_view();
             $("#form_data")[0].reset();
-            $("#form_data").find("input").each(function () {
-                $(this).removeClass("has-error");
-            });
-            $("#error").hide();
-            $("#success").hide();
-            $("#h2-title").text("Consultar Testimonials");
             $("#preview").html("");
-            $("#ruta").html("");
             if ($("#guardar_datos").data("editar") == 1) {
                 $("#guardar_datos").text("Guardar").data("editar", 0);
                 consultar();

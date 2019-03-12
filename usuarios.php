@@ -27,7 +27,7 @@
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="index.php">Sign out</a>
+                <a class="nav-link" href="includes/log_out.php">Sign out</a>
             </li>
         </ul>
     </nav>
@@ -43,6 +43,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="works.php">
+                                Works
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="ourteam.php">
                                 Our Team
                             </a>
@@ -50,6 +55,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="testimonials.php">
                                 Testimonials
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="download.php">
+                                Download
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="footer.php">
+                                Footer
                             </a>
                         </li>
                     </ul>
@@ -73,6 +88,7 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Teléfono</th>
+                                <th>Foto</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -92,6 +108,7 @@
                                     <input type="email" id="inputCorreo" name="correo" class="form-control">
                                 </div>
                                 <div class="form-group">
+                                    <label for="img">Foto:</label>
                                     <input type="file" name="foto" id="foto">
                                     <input type="hidden" name="ruta" id="ruta" readonly="readonly">
                                 </div>
@@ -150,6 +167,7 @@
           <tr>
           <td>${e.nombre_usr}</td>
           <td>${e.telefono_usr}</td>
+          <td><img src="${e.foto_usr}" class="img-thumbnail" width="100" height="100"/></td>
           <td>
           <a href="#" data-id="${e.id_usr}" class="editar_usuarios">Editar</a>
           <a href="#" data-id="${e.id_usr}" class="eliminar_usuarios">Eliminar</a>
@@ -165,20 +183,22 @@
             change_view('insert_data');
             $("#h2-title").text("Insertar Usuario");
             $("#guardar_datos").text("Guardar").data("editar", 0);
+            $("#preview").html("");
+            $('#ruta').attr('value', '');
             $("#form_data")[0].reset();
         });
         //FUNCION PARA INSERTAR DATOS A LA BD
         $("#guardar_datos").click(function () {
             let nombre_usr = $("#inputNombre").val();
             let correo_usr = $("#inputCorreo").val();
-            let foto = $("#foto").val();
+            let img_usr = $('#ruta').val();
             let telefono_usr = $("#inputTelefono").val();
             let password_usr = $("#inputPassword").val();
             let obj = {
                 "accion": "insertar_usuarios",
                 "nombre_usr": nombre_usr,
                 "correo_usr": correo_usr,
-                "foto": foto,
+                "img_usr": img_usr,
                 "telefono_usr": telefono_usr,
                 "password_usr": password_usr
             }
@@ -267,6 +287,12 @@
             $.post("includes/_funciones.php", obj, function (r) {
                 $("#inputNombre").val(r.nombre_usr);
                 $("#inputCorreo").val(r.correo_usr);
+                let template =
+                    `
+                    <img src="${r.foto_usr}" class="img-thumbnail" width="200" height="200"/>
+                    `;
+                $("#ruta").val(r.foto_usr);
+                $("#preview").html(template);
                 $("#inputTelefono").val(r.telefono_usr);
                 $("#inputPassword").val(r.password_usr);
             }, "JSON");
@@ -276,6 +302,7 @@
             consultar();
             change_view();
         });
+        //FUNCION PARA GUARDAR IMAGENES
         $("#foto").on("change", function (e) {
             let formDatos = new FormData($("#form_data")[0]);
             formDatos.append("accion", "carga_foto");
@@ -292,7 +319,7 @@
                     }
                     let template =
                         `
-          <img src="${respuesta.archivo}" alt="" class="img-fluid" />
+          <img src="${respuesta.archivo}" class="img-thumbnail" width="200" height="200"/>
           `;
                     $("#ruta").val(respuesta.archivo);
                     $("#preview").html(template);
@@ -309,6 +336,11 @@
             $("#error").hide();
             $("#success").hide();
             $("#h2-title").text("Consultar Usuarios");
+            $("#preview").html("");
+            if ($("#guardar_datos").data("editar") == 1) {
+                $("#guardar_datos").text("Guardar").data("editar", 0);
+                consultar();
+            }
         });
     </script>
 </body>
