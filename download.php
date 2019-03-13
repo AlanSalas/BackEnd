@@ -19,6 +19,7 @@
 
   <!-- Custom styles for this template -->
   <link href="css/estilos.css" rel="stylesheet">
+  <link rel="shortcut icon" href="img/unid-ico.ico">
 </head>
 
 <body>
@@ -40,6 +41,11 @@
             <li class="nav-item">
               <a class="nav-link" href="usuarios.php">
                 Usuarios
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="features.php">
+                Features
               </a>
             </li>
             <li class="nav-item">

@@ -17,6 +17,7 @@
     <title>Usuarios</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="css/estilos.css" rel="stylesheet">
+    <link rel="shortcut icon" href="img/unid-ico.ico">
 </head>
 
 <body>
@@ -38,6 +39,11 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="usuarios.php">
                                 Usuarios <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features.php">
+                                Features
                             </a>
                         </li>
                         <li class="nav-item">
