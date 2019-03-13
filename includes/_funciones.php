@@ -24,6 +24,22 @@ require_once("con_db.php");
 		case 'carga_foto':
 			carga_foto();
 			break;
+	//FEATURES
+		case 'consultar_features':
+			consultar_features();
+			break;
+		case 'insertar_features':
+			insertar_features();
+			break;
+		case 'eliminar_features';
+			eliminar_features($_POST['id']);
+			break;
+		case 'editar_features':
+			editar_features();
+			break;
+		case 'consultar_registro_features':
+			consultar_registro_features($_POST['id']);
+			break;	
 	//WORKS
 		case 'consultar_works';
 			consultar_works();
@@ -552,7 +568,8 @@ require_once("con_db.php");
 				echo "Hubo un problema";
 			}
 		}
-		function consultar_download(){
+
+	function consultar_download(){
 		global $mysqli;
 		$consulta = "SELECT * FROM download";
 		$resultado = mysqli_query($mysqli, $consulta);
@@ -561,15 +578,17 @@ require_once("con_db.php");
 			array_push($arreglo, $fila);
 		}
 		echo json_encode($arreglo); //Imprime el JSON ENCODEADO
-		}
-		function consultar_registro_download($id){
+	}
+
+	function consultar_registro_download($id){
 		global $mysqli;
 		$sql = "SELECT * FROM download WHERE id_download = $id";
 		$rsl = $mysqli->query($sql);
 		$fila = mysqli_fetch_array($rsl);
 		echo json_encode($fila); //Imprime Json encodeado
-		}
-		function editar_download($id){
+	}
+
+	function editar_download($id){
 		global $mysqli;
 		$titulo_download = $_POST['titulo_download'];
 		$subtitulo_download = $_POST['subtitulo_download'];
@@ -580,8 +599,9 @@ require_once("con_db.php");
 		}else{
 				echo "No se pudo editar karnal";
 		}
-		}
-		function eliminar_download($id){
+	}
+
+	function eliminar_download($id){
 		global $mysqli;
 		$consulta = "DELETE FROM download WHERE id_download = $id";
 		$resultado = mysqli_query($mysqli, $consulta);
@@ -590,7 +610,7 @@ require_once("con_db.php");
 		}else{
 			echo "No se quiere ir el dato karnal";
 		}
-		}
+	}
 	//------------------------------FUNCIONES MODULO FOOTER------------------------------//
 	function insertar_footer(){
 		global $mysqli;
@@ -613,7 +633,8 @@ require_once("con_db.php");
 			echo "Hubo un problema";
 			}
 		}
-		function consultar_footer(){
+
+	function consultar_footer(){
 		global $mysqli;
 		$consulta = "SELECT * FROM footer";
 		$resultado = mysqli_query($mysqli, $consulta);
@@ -622,15 +643,17 @@ require_once("con_db.php");
 			array_push($arreglo, $fila);
 		}
 		echo json_encode($arreglo); //Imprime el JSON ENCODEADO
-		}
-		function consultar_registro_footer($id){
+	}
+
+	function consultar_registro_footer($id){
 		global $mysqli;
 		$sql = "SELECT * FROM footer WHERE id_footer = $id";
 		$rsl = $mysqli->query($sql);
 		$fila = mysqli_fetch_array($rsl);
 		echo json_encode($fila); //Imprime Json encodeado	
-		}
-		function editar_footer($id){
+	}
+
+	function editar_footer($id){
 		global $mysqli;
 		$titulo_direccion = $_POST['titulo_direccion'];
 		$direccion = $_POST['direccion'];
@@ -648,8 +671,9 @@ require_once("con_db.php");
 		}else{
 			echo "No se pudo editar karnal";
 		}
-		}
-		function eliminar_footer($id){
+	}
+
+	function eliminar_footer($id){
 		global $mysqli;
 		$consulta = "DELETE FROM footer WHERE id_footer = $id";
 		$resultado = mysqli_query($mysqli, $consulta);
@@ -658,5 +682,86 @@ require_once("con_db.php");
 		}else{
 			echo "No se quiere ir el dato karnal";
 		}
+	}
+	//------------------------------FUNCIONES MODULO FEATURES------------------------------//
+	function consultar_features(){
+		//Conectar a la BD
+		global $mysqli;
+		//Realizar consulta
+		$sql = "SELECT * FROM features";
+		$rsl = $mysqli->query($sql);
+		$array = [];
+		while ($row = mysqli_fetch_array($rsl)) {
+			array_push($array, $row);
 		}
+		echo json_encode($array); //Imprime Json encodeado
+	}
+
+	function insertar_features(){
+		//Conectar a la bd
+		global $mysqli;
+		$titulo = $_POST['titulo_f'];
+		$texto = $_POST['texto_f'];
+		$icono = $_POST['icono_f'];
+		//Validacion de campos vacios
+		if (empty($titulo) && empty($texto) && empty($icono)) {
+			echo "0";
+		}elseif (empty($titulo)) {
+			echo "2";
+		}elseif (empty($texto)) {
+			echo "3";
+		}elseif (empty($icono)) {
+			echo "4";
+		}else{
+			$sql = "INSERT INTO features VALUES('', '$titulo', '$texto', '$icono')";
+			$rsl = $mysqli->query($sql);
+			echo "1";
+		}	
+	}
+
+	function eliminar_features($id){
+		global $mysqli;
+		$sql = "DELETE FROM features WHERE id_f = $id";
+		$rsl = $mysqli->query($sql);
+		if ($rsl) {
+			echo "Se elimino correctamente";
+		}else{
+			echo "Se genero un error, intenta nuevamente";
+		}
+	}
+
+	function consultar_registro_features($id){
+		global $mysqli;
+		$sql = "SELECT * FROM features WHERE id_f = $id";
+		$rsl = $mysqli->query($sql);
+		$fila = mysqli_fetch_array($rsl);
+		echo json_encode($fila); //Imprime Json encodeado	
+	}
+	
+	function editar_features(){
+		//Conectar a la bd
+		global $mysqli;
+		$titulo = $_POST['titulo_f'];
+		$texto = $_POST['texto_f'];
+		$icono = $_POST['icono_f'];
+		$id = $_POST['id'];
+		//Validacion de campos vacios
+		if (empty($titulo) && empty($texto) && empty($icono)) {
+			echo "0";
+		}elseif (empty($titulo)) {
+			echo "2";
+		}elseif (empty($texto)) {
+			echo "3";
+		}elseif (empty($icono)) {
+			echo "4";
+		}else{
+			$sql = "UPDATE features SET titulo_f = '$titulo', texto_f = '$texto', icono_f = '$icono' WHERE id_f = '$id'";
+			$rsl = $mysqli->query($sql);
+			if ($rsl) {
+				echo "5";
+			}else{
+				echo "6";
+			}
+		}	
+	}
 ?>
